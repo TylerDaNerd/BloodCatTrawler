@@ -336,6 +336,9 @@ namespace Client
                                 using (var client = new WebClient())
                                 {
                                     var fileName = song.ID + (!string.IsNullOrEmpty(song.Name) ? " " + song.Name : string.Empty) + ".osz";
+
+                                    fileName = string.Join("-", fileName.Split(Path.GetInvalidFileNameChars()));
+
                                     var tempPath = Path.Combine(Path.GetTempPath(), fileName);
 
                                     Dispatcher.BeginInvoke(new Action(() =>
