@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="BloodCat Trawler" Height="350" Width="525">
+        Title="BloodCat Trawler" Height="480" Width="640" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- TODO: Border colour same as windows theme colour -->
-        <Border BorderBrush="Gray" BorderThickness="0 0 0 1">
+        <Border BorderBrush="Gray" BorderThickness="0 0 0 1" Margin="0" Padding="0">
             <Grid x:Name="osuInstallationWrapper" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
@@ -23,14 +23,91 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="osuInstallationPath" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationPath_TextChanged" Text="text for update event"/>
-                    <Button x:Name="osuInstallationConfirm" Content="Confirm" Grid.Column="1" Margin="4" Click="osuInstallationConfirm_Click" IsEnabled="False" Width="120"/>
+                    <TextBox x:Name="osuInstallationInput" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationInput_TextChanged" Text="text for update event" VerticalAlignment="Center"/>
+                    <Button x:Name="osuInstallationConfirm" Content="Confirm" Grid.Column="1" Margin="4" Click="osuInstallationConfirm_Click" IsEnabled="False" Width="120" VerticalAlignment="Center"/>
                 </Grid>
                 <Label x:Name="osuInstallationStatus" Content="osu installation status" Margin="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             </Grid>
         </Border>
         <Grid x:Name="programBodyWrapper" Margin="0" Grid.Row="1" IsEnabled="False">
-            <Button x:Name="button" Content="the program" Margin="8"/>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="172*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="173*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="localSongsListBox" Margin="4" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label Content="Local songs" Margin="4" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </Grid>
+                <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" Margin="4"/>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="searchTermsWrapper" Margin="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Status" Margin="0" VerticalAlignment="Top" Grid.ColumnSpan="4" HorizontalAlignment="Center"/>
+                        <CheckBox x:Name="checkRanked" Content="Ranked" Margin="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="checkApproved" Content="Approved" Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="checkQualified" Content="Qualified" Grid.Row="1" VerticalAlignment="Center" Grid.Column="2" Margin="0" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="checkUnranked" Content="Unranked" Grid.Row="1" VerticalAlignment="Center" Grid.Column="3" Margin="0" HorizontalAlignment="Left"/>
+                        <Label Content="Mode" Margin="0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="2" HorizontalAlignment="Center"/>
+                        <CheckBox x:Name="checkStandard" Content="Standard" Margin="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="checkTaiko" Content="Taiko" Grid.Row="3" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" Margin="0"/>
+                        <CheckBox x:Name="checkCTB" Content="CTB" Grid.Row="3" VerticalAlignment="Center" Grid.Column="2" Margin="0" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="checkMania" Content="Mania" Grid.Row="3" VerticalAlignment="Center" Grid.Column="3" Margin="0" HorizontalAlignment="Left"/>
+                        <Label Content="Search terms" Margin="0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="4" HorizontalAlignment="Center"/>
+                        <TextBox x:Name="searchTermsBox" Grid.ColumnSpan="4" Margin="0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Button x:Name="startStopButton" Content="Start" Margin="4" Grid.Row="2" VerticalAlignment="Bottom" Click="startStopButton_Click"/>
+                    <ListView x:Name="processingSongsListBox" Margin="4" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="State" DisplayMemberBinding="{Binding State}"/>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label x:Name="trawlingPageLabel" Content="Trawling page N" HorizontalAlignment="Center" Margin="4" Grid.Row="3" VerticalAlignment="Top"/>
+                    <Label x:Name="trawlingErrorLabel" Content="Error label" HorizontalAlignment="Center" Margin="4" Grid.Row="4" VerticalAlignment="Top" Foreground="Red"/>
+
+                </Grid>
+            </Grid>
+            <ProgressBar x:Name="downloadProgress" Height="20" Margin="4" Grid.Row="1" VerticalAlignment="Bottom" Visibility="Collapsed"/>
         </Grid>
 
     </Grid>
