@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -15,7 +15,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Client
 {
@@ -281,32 +282,37 @@ namespace Client
                         query["p"] = page.ToString();
 
                         Uri uri = new Uri("http://bloodcat.com/osu?" + query.ToString());
-                        Console.WriteLine(uri);
 
                         try
                         {
                             var request = WebRequest.CreateHttp(uri);
                             using (var response = request.GetResponse())
                             using (var stream = response.GetResponseStream())
-                            using (var reader = new StreamReader(stream))
                             {
-                                var songs = JArray.Parse(reader.ReadToEnd());
+                                XmlDocument doc = new XmlDocument();
+                                using (var reader = JsonReaderWriterFactory.CreateJsonReader(stream, XmlDictionaryReaderQuotas.Max))
+                                {
+                                    XElement xml = XElement.Load(reader);
+                                    doc.LoadXml(xml.ToString());
+                                }
+
+                                var songs = doc.SelectNodes("/root/item");
 
                                 if (songs.Count == 0)
                                     break;
 
                                 int newCount = 0;
-                                foreach (var s in songs)
+                                foreach (XmlNode s in songs)
                                 {
-                                    var info = new SongInfo(long.Parse(s["id"].ToString()), s["title"].ToString());
+                                    var info = new SongInfo(long.Parse(s["id"].InnerText), s["title"].InnerText);
 
                                     if (_localSongs.Contains(info, new InlineEqualityComparer<SongInfo>((x, y) => x.ID == y.ID)))
-                                        continue;
+                                    continue;
 
-                                    if (_processingSongs.Contains(info, new InlineEqualityComparer<SongInfo>((x, y) => x.ID == y.ID)))
-                                        continue;
+                                     if (_processingSongs.Contains(info, new InlineEqualityComparer<SongInfo>((x, y) => x.ID == y.ID)))
+                                    continue;
 
-                                    _processingSongs.Add(new ProcessedSongInfo(info, ProcessedSongInfo.ProcessState.Waiting));
+                                     _processingSongs.Add(new ProcessedSongInfo(info, ProcessedSongInfo.ProcessState.Waiting));
                                     newCount++;
                                 }
 
