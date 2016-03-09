@@ -537,7 +537,7 @@ namespace Client
                         {
                             client.DownloadFileTaskAsync(new Uri(_updateBinaryUrl), tempPath).Wait();
 
-                            Process.Start(tempPath, $"--updateMove \"{tempPath}\"");
+                            Process.Start(tempPath, $"--updateMove \"{Assembly.GetExecutingAssembly().Location}\"");
 
                             Dispatcher.BeginInvoke(new Action(Close));
 
