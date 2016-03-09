@@ -5,36 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="BloodCat Trawler" Height="480" Width="640" Closing="Window_Closing">
+        Title="BloodCat Trawler" Height="640" Width="640" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!-- TODO: Border colour same as windows theme colour -->
         <Border BorderBrush="Gray" BorderThickness="0 0 0 1" Margin="0" Padding="0">
-            <Grid x:Name="osuInstallationWrapper" Margin="0">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="osuInstallationInput" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationInput_TextChanged" Text="text for update event" VerticalAlignment="Center"/>
-                    <Button x:Name="osuInstallationConfirm" Content="Confirm" Grid.Column="1" Margin="4" Click="osuInstallationConfirm_Click" IsEnabled="False" Width="120" VerticalAlignment="Center"/>
+                <Grid x:Name="osuInstallationWrapper" Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="osuInstallationInput" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationInput_TextChanged" Text="text for update event" VerticalAlignment="Center"/>
+                        <Button x:Name="osuInstallationConfirm" Content="Confirm" Grid.Column="1" Margin="4" Click="osuInstallationConfirm_Click" IsEnabled="False" Width="120" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Label x:Name="osuInstallationStatus" Content="osu installation status" Margin="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 </Grid>
-                <Label x:Name="osuInstallationStatus" Content="osu installation status" Margin="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <Label x:Name="updateCompleteStatus" Content="update complete status" HorizontalAlignment="Center" Margin="4" Grid.Row="1" VerticalAlignment="Top"/>
             </Grid>
         </Border>
         <Grid x:Name="programBodyWrapper" Margin="0" Grid.Row="1" IsEnabled="False">
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="17*"/>
+                <RowDefinition Height="103*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid>
+            <Grid Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="172*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -107,7 +116,19 @@
 
                 </Grid>
             </Grid>
-            <ProgressBar x:Name="downloadProgress" Height="20" Margin="4" Grid.Row="1" VerticalAlignment="Bottom" Visibility="Collapsed"/>
+            <ProgressBar x:Name="downloadProgress" Height="20" Margin="4,0,4,4" Grid.Row="2" VerticalAlignment="Bottom"/>
+        </Grid>
+        <Grid Margin="0" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ProgressBar x:Name="updateProgress" Height="20" Margin="4,0,4,4" Grid.Row="3" VerticalAlignment="Bottom"/>
+            <Label x:Name="updateStatus" Content="update status" HorizontalAlignment="Center" Margin="4" Grid.Row="1" VerticalAlignment="Bottom"/>
+            <Button x:Name="updateButton" Content="update button" Margin="4,0,4,4" VerticalAlignment="Bottom" Click="updateButton_Click"/>
+            <Label x:Name="updateException" Content="update exception" HorizontalAlignment="Center" Margin="4" Grid.Row="2" VerticalAlignment="Bottom" Foreground="Red"/>
         </Grid>
 
     </Grid>
