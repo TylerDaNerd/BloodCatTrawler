@@ -68,7 +68,8 @@
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -101,7 +102,7 @@
                         <Label Content="Search terms" Margin="0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="4" HorizontalAlignment="Center"/>
                         <TextBox x:Name="searchTermsBox" Grid.ColumnSpan="4" Margin="0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center"/>
                     </Grid>
-                    <Button x:Name="startStopButton" Content="Start" Margin="4" Grid.Row="2" VerticalAlignment="Bottom" Click="startStopButton_Click"/>
+                    <Button x:Name="startStopButton" Content="Start" Margin="4" Grid.Row="3" VerticalAlignment="Bottom" Click="startStopButton_Click"/>
                     <ListView x:Name="processingSongsListBox" Margin="4" Grid.Row="1">
                         <ListView.View>
                             <GridView>
@@ -111,8 +112,9 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Label x:Name="trawlingPageLabel" Content="Trawling page N" HorizontalAlignment="Center" Margin="4" Grid.Row="3" VerticalAlignment="Top"/>
-                    <Label x:Name="trawlingErrorLabel" Content="Error label" HorizontalAlignment="Center" Margin="4" Grid.Row="4" VerticalAlignment="Top" Foreground="Red"/>
+                    <Label x:Name="trawlingPageLabel" Content="Trawling page N" HorizontalAlignment="Center" Margin="108,4,107,0" Grid.Row="4" VerticalAlignment="Top"/>
+                    <Label x:Name="trawlingException" Content="trawling exception" HorizontalAlignment="Center" Margin="102,4,102,0" Grid.Row="5" VerticalAlignment="Top" Foreground="Red"/>
+                    <Button x:Name="clearCompletedButton" Content="Clear completed entries" Margin="4" Grid.Row="2" VerticalAlignment="Bottom" Click="clearCompletedButton_Click"/>
 
                 </Grid>
             </Grid>

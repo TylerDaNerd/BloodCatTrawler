@@ -37,7 +37,10 @@ namespace Client
         {
             InitializeComponent();
 
-            switch((Application.Current as App).ProgramUpdateState)
+            // This might become a thing, prefer to hide version info for now
+            //Title = $"BloodCat Trawler {Assembly.GetExecutingAssembly().GetName().Version}";
+
+            switch ((Application.Current as App).ProgramUpdateState)
             {
                 case App.UpdateState.UpdateCompleted:
                     updateCompleteStatus.Foreground = Brushes.Green;
@@ -61,7 +64,7 @@ namespace Client
             BindingOperations.EnableCollectionSynchronization(_processingSongs, _processingSongsLock);
 
             trawlingPageLabel.Visibility = Visibility.Collapsed;
-            trawlingErrorLabel.Visibility = Visibility.Collapsed;
+            trawlingException.Visibility = Visibility.Collapsed;
 
             updateButton.Visibility = Visibility.Collapsed;
             updateStatus.Visibility = Visibility.Collapsed;
@@ -350,7 +353,7 @@ namespace Client
                         startStopButton.IsEnabled = true;
 
                         trawlingPageLabel.Visibility = Visibility.Visible;
-                        trawlingErrorLabel.Visibility = Visibility.Collapsed;
+                        trawlingException.Visibility = Visibility.Collapsed;
                     }));
 
                     bool noNew = false;
@@ -443,14 +446,14 @@ namespace Client
                                 Dispatcher.BeginInvoke(new Action(() => { processingSongsListBox.Items.Refresh(); }));
                             }
 
-                            Dispatcher.BeginInvoke(new Action(() => { trawlingErrorLabel.Visibility = Visibility.Collapsed; }));
+                            Dispatcher.BeginInvoke(new Action(() => { trawlingException.Visibility = Visibility.Collapsed; }));
                         }
                         catch (Exception ex)
                         {
                             Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                trawlingErrorLabel.Visibility = Visibility.Visible;
-                                trawlingErrorLabel.Content = ex.Message;
+                                trawlingException.Visibility = Visibility.Visible;
+                                trawlingException.Content = ex.Message;
                             }));
                         }
 
@@ -559,5 +562,14 @@ namespace Client
             _updateDownloadThread.Start();
         }
 
+        private void clearCompletedButton_Click(object sender, RoutedEventArgs e)
+        {
+            lock (_processingSongsLock)
+            {
+                ProcessedSongInfo s;
+                while ((s = _processingSongs.FirstOrDefault(x => x.State == ProcessedSongInfo.ProcessState.Completed)) != null)
+                    _processingSongs.Remove(s);
+            }
+        }
     }
 }
