@@ -71,6 +71,8 @@ namespace Client
             updateProgress.Visibility = Visibility.Collapsed;
             updateException.Visibility = Visibility.Collapsed;
 
+            downloadProgressWrapper.Visibility = Visibility.Collapsed;
+
             _updateCheckThread = new Thread(() =>
             {
                 while (!_stopUpdate)
@@ -299,6 +301,8 @@ namespace Client
         List<string> _statuses = new List<string>();
         string _terms;
 
+        WebClient _downloadClient;
+
         void SetTrawlingPageLabel(int page) => Dispatcher.BeginInvoke(new Action(() => { trawlingPageLabel.Content = $"Trawling Page {page}"; }));
 
         private void startStopButton_Click(object sender, RoutedEventArgs e)
@@ -309,6 +313,9 @@ namespace Client
                 startStopButton.IsEnabled = false;
 
                 _stopRequested = true;
+
+                if (_downloadClient != null)
+                    _downloadClient.CancelAsync();
             }
             else
             {
@@ -415,7 +422,7 @@ namespace Client
                                 song.State = ProcessedSongInfo.ProcessState.Downloading;
                                 Dispatcher.BeginInvoke(new Action(processingSongsListBox.Items.Refresh));
 
-                                using (var client = new WebClient())
+                                using (_downloadClient = new WebClient())
                                 {
                                     var fileName = song.ID + (!string.IsNullOrEmpty(song.Name) ? " " + song.Name : string.Empty) + ".osz";
 
@@ -426,23 +433,40 @@ namespace Client
                                     Dispatcher.BeginInvoke(new Action(() =>
                                     {
                                         downloadProgress.Value = 0;
-                                        downloadProgress.Visibility = Visibility.Visible;
+                                        downloadProgressWrapper.Visibility = Visibility.Visible;
+                                        downloadProgressLabel.Content = string.Empty;
                                     }));
-                                    client.DownloadProgressChanged += (object dSender, DownloadProgressChangedEventArgs dE) =>
+                                    _downloadClient.DownloadProgressChanged += (object dSender, DownloadProgressChangedEventArgs dE) =>
                                     {
                                         Dispatcher.BeginInvoke(new Action(() =>
                                         {
+                                            downloadProgressLabel.Content = $"{dE.BytesReceived}/{dE.TotalBytesToReceive} B";
+
                                             if (dE.ProgressPercentage != downloadProgress.Value)
                                                 downloadProgress.Value = dE.ProgressPercentage;
                                         }));
                                     };
-                                    client.DownloadFileTaskAsync($"http://bloodcat.com/osu/s/{song.ID}", tempPath).Wait();
-                                    Dispatcher.BeginInvoke(new Action(() => { downloadProgress.Visibility = Visibility.Collapsed; }));
+                                    try
+                                    {
+                                        _downloadClient.DownloadFileTaskAsync($"http://bloodcat.com/osu/s/{song.ID}", tempPath).Wait();
+                                    }
+                                    catch (AggregateException ex)
+                                    {
+                                        if (!(ex.InnerException is WebException && (ex.InnerException as WebException).Status == WebExceptionStatus.RequestCanceled))
+                                            throw;
+
+                                        song.State = ProcessedSongInfo.ProcessState.Waiting;
+                                    }
+                                    Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        downloadProgressWrapper.Visibility = Visibility.Collapsed;
+                                    }));
 
                                     File.Move(tempPath, Path.Combine(_osuSongPath.FullName, fileName));
                                 }
 
-                                song.State = ProcessedSongInfo.ProcessState.Completed;
+                                if (song.State == ProcessedSongInfo.ProcessState.Downloading)
+                                    song.State = ProcessedSongInfo.ProcessState.Completed;
                                 Dispatcher.BeginInvoke(new Action(() => { processingSongsListBox.Items.Refresh(); }));
                             }
 
@@ -489,6 +513,9 @@ namespace Client
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Hide();
+
+            if (_downloadClient != null)
+                _downloadClient.CancelAsync();
 
             _stopRequested = true;
             _stopUpdate = true;

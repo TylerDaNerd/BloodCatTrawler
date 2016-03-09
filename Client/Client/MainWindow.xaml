@@ -118,7 +118,10 @@
 
                 </Grid>
             </Grid>
-            <ProgressBar x:Name="downloadProgress" Height="20" Margin="4,0,4,4" Grid.Row="2" VerticalAlignment="Bottom"/>
+            <Grid x:Name="downloadProgressWrapper" Grid.Row="2" Margin="4">
+                <ProgressBar x:Name="downloadProgress" Height="20" VerticalAlignment="Center"/>
+                <Label x:Name="downloadProgressLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="download progress label" />
+            </Grid>
         </Grid>
         <Grid Margin="0" Grid.Row="2">
             <Grid.RowDefinitions>
