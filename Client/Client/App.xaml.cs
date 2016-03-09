@@ -50,9 +50,10 @@ namespace Client
                             {
                                 try
                                 {
-                                    File.Copy(Assembly.GetExecutingAssembly().Location, e.Args[2]);
+                                    File.Copy(Assembly.GetExecutingAssembly().Location, e.Args[2], true);
                                     Process.Start(e.Args[1], "--updateCompleted");
                                     Shutdown();
+                                    return;
                                 }
                                 catch
                                 {
