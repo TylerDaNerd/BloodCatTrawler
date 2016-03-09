@@ -263,6 +263,9 @@ namespace Client
 
                 string name = parts.Length > 1 ? s.Name.Substring(parts[0].Length + 1) : null;
 
+                if (!string.IsNullOrEmpty(s.Extension) && s.Extension == ".osz")
+                    name = name.Substring(0, name.Length - 4);
+
                 songInfos.Add(new SongInfo(long.Parse(parts[0]), name));
             }
 
@@ -462,7 +465,7 @@ namespace Client
                                         downloadProgressWrapper.Visibility = Visibility.Collapsed;
                                     }));
 
-                                    File.Move(tempPath, Path.Combine(_osuSongPath.FullName, fileName));
+                                    File.Copy(tempPath, Path.Combine(_osuSongPath.FullName, fileName), true);
                                 }
 
                                 if (song.State == ProcessedSongInfo.ProcessState.Downloading)
@@ -485,6 +488,13 @@ namespace Client
                         {
                             if (s.State == ProcessedSongInfo.ProcessState.Downloading)
                                 s.State = ProcessedSongInfo.ProcessState.Waiting;
+                        }
+
+                        lock (_processingSongsLock)
+                        {
+                            ProcessedSongInfo s;
+                            while ((s = _processingSongs.FirstOrDefault(x => x.State == ProcessedSongInfo.ProcessState.Waiting)) != null)
+                                _processingSongs.Remove(s);
                         }
 
                         Dispatcher.BeginInvoke(new Action(processingSongsListBox.Items.Refresh));
