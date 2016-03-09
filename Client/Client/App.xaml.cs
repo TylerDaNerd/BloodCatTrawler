@@ -31,7 +31,7 @@ namespace Client
             switch (e.Args.Length)
             {
                 case 1:
-                    switch (e.Args[1])
+                    switch (e.Args[0])
                     {
                         case "--updateCompleted":
                             ProgramUpdateState = UpdateState.UpdateCompleted;
@@ -42,7 +42,7 @@ namespace Client
                     }
                     break;
                 case 2:
-                    switch (e.Args[1])
+                    switch (e.Args[0])
                     {
                         case "--updateMove":
                             int updateAttempts = 3;
@@ -51,7 +51,7 @@ namespace Client
                                 try
                                 {
                                     File.Copy(Assembly.GetExecutingAssembly().Location, e.Args[2]);
-                                    Process.Start(e.Args[2], "--updateCompleted");
+                                    Process.Start(e.Args[1], "--updateCompleted");
                                     Shutdown();
                                 }
                                 catch
@@ -59,7 +59,7 @@ namespace Client
                                     Thread.Sleep(5000);
                                 }
                             }
-                            Process.Start(e.Args[2], "--updateFailed");
+                            Process.Start(e.Args[1], "--updateFailed");
                             Shutdown();
                             break;
                     }
