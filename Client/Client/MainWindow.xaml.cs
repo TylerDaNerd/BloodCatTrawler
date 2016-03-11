@@ -452,6 +452,7 @@ namespace Client
                                     try
                                     {
                                         _downloadClient.DownloadFileTaskAsync($"http://bloodcat.com/osu/s/{song.ID}", tempPath).Wait();
+                                        File.Copy(tempPath, Path.Combine(_osuSongPath.FullName, fileName), true);
                                     }
                                     catch (AggregateException ex)
                                     {
@@ -464,8 +465,6 @@ namespace Client
                                     {
                                         downloadProgressWrapper.Visibility = Visibility.Collapsed;
                                     }));
-
-                                    File.Copy(tempPath, Path.Combine(_osuSongPath.FullName, fileName), true);
                                 }
 
                                 if (song.State == ProcessedSongInfo.ProcessState.Downloading)
