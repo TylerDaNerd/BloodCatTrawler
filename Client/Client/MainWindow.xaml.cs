@@ -453,6 +453,7 @@ namespace Client
                                     {
                                         _downloadClient.DownloadFileTaskAsync($"http://bloodcat.com/osu/s/{song.ID}", tempPath).Wait();
                                         File.Copy(tempPath, Path.Combine(_osuSongPath.FullName, fileName), true);
+                                        File.Delete(tempPath);
                                     }
                                     catch (AggregateException ex)
                                     {
@@ -464,6 +465,7 @@ namespace Client
                                     Dispatcher.BeginInvoke(new Action(() =>
                                     {
                                         downloadProgressWrapper.Visibility = Visibility.Collapsed;
+                                        trawlingException.Visibility = Visibility.Collapsed;
                                     }));
                                 }
 
@@ -471,8 +473,6 @@ namespace Client
                                     song.State = ProcessedSongInfo.ProcessState.Completed;
                                 Dispatcher.BeginInvoke(new Action(() => { processingSongsListBox.Items.Refresh(); }));
                             }
-
-                            Dispatcher.BeginInvoke(new Action(() => { trawlingException.Visibility = Visibility.Collapsed; }));
                         }
                         catch (Exception ex)
                         {
