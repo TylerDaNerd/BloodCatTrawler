@@ -29,7 +29,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="osuInstallationInput" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationInput_TextChanged" Text="text for update event" VerticalAlignment="Center"/>
+                        <TextBox x:Name="osuInstallationInput" Margin="4" TextWrapping="Wrap" TextChanged="osuInstallationInput_TextChanged" Text="text for update event" VerticalAlignment="Center" KeyDown="osuInstallationInput_KeyDown"/>
                         <Button x:Name="osuInstallationConfirm" Content="Confirm" Grid.Column="1" Margin="4" Click="osuInstallationConfirm_Click" IsEnabled="False" Width="120" VerticalAlignment="Center"/>
                     </Grid>
                     <Label x:Name="osuInstallationStatus" Content="osu installation status" Margin="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
@@ -100,9 +100,9 @@
                         <CheckBox x:Name="checkCTB" Content="CTB" Grid.Row="3" VerticalAlignment="Center" Grid.Column="2" Margin="0" HorizontalAlignment="Left"/>
                         <CheckBox x:Name="checkMania" Content="Mania" Grid.Row="3" VerticalAlignment="Center" Grid.Column="3" Margin="0" HorizontalAlignment="Left"/>
                         <Label Content="Search terms" Margin="0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="4" HorizontalAlignment="Center"/>
-                        <TextBox x:Name="searchTermsBox" Grid.ColumnSpan="4" Margin="0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBox x:Name="searchTermsBox" Grid.ColumnSpan="4" Margin="0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center" KeyDown="searchTermsBox_KeyDown"/>
                     </Grid>
-                    <Button x:Name="startStopButton" Content="Start" Margin="4" Grid.Row="3" VerticalAlignment="Bottom" Click="startStopButton_Click"/>
+                    <Button x:Name="startStopButton" Content="Start" Margin="4" Grid.Row="3" VerticalAlignment="Bottom" Click="startStopButton_Click" />
                     <ListView x:Name="processingSongsListBox" Margin="4" Grid.Row="1">
                         <ListView.View>
                             <GridView>

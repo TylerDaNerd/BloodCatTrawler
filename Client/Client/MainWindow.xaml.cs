@@ -16,6 +16,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
@@ -609,6 +610,20 @@ namespace Client
                 while ((s = _processingSongs.FirstOrDefault(x => x.State == ProcessedSongInfo.ProcessState.Completed)) != null)
                     _processingSongs.Remove(s);
             }
+        }
+
+        private void searchTermsBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                if (startStopButton.IsEnabled)
+                    startStopButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void osuInstallationInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                if (osuInstallationConfirm.IsEnabled)
+                    osuInstallationConfirm.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
     }
 }
