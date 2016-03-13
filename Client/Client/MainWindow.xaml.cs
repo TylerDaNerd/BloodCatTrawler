@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace Client
                     break;
             }
 
-            osuInstallationInput.Text = string.Empty;
+            osuInstallationInput.Text = Properties.Settings.Default.OsuInstallPath ?? string.Empty;
 
             localSongsListBox.ItemsSource = _localSongs;
             BindingOperations.EnableCollectionSynchronization(_localSongs, _localSongsLock);
@@ -127,6 +128,9 @@ namespace Client
 
         private void osuInstallationConfirm_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.OsuInstallPath = osuInstallationInput.Text;
+            Properties.Settings.Default.Save();
+
             updateCompleteStatus.Visibility = Visibility.Collapsed;
 
             osuInstallationWrapper.IsEnabled = false;
