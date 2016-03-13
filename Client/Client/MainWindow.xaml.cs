@@ -330,6 +330,9 @@ namespace Client
 
                 searchTermsWrapper.IsEnabled = false;
 
+                _modes.Clear();
+                _statuses.Clear();
+
                 if (checkStandard.IsChecked.Value)
                     _modes.Add("0");
                 if (checkTaiko.IsChecked.Value)
