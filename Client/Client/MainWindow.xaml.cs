@@ -435,6 +435,8 @@ namespace Client
 
                                 using (_downloadClient = new WebClient())
                                 {
+                                    _downloadClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"; // server side fix
+
                                     var fileName = song.ID + (!string.IsNullOrEmpty(song.Name) ? " " + song.Name : string.Empty) + ".osz";
 
                                     fileName = string.Join("-", fileName.Split(Path.GetInvalidFileNameChars()));
